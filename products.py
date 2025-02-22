@@ -62,7 +62,7 @@ class Product:
             self.deactivate()
 
 
-    def is_active(self) -> bool:
+    def is_active(self):
 
         """Checks if product is active"""
 

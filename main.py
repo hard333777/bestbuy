@@ -16,25 +16,6 @@ def print_menu():
 ''')
 
 
-# def list_all_products(product_list):
-#
-#     """Prints full info about entered products"""
-#
-#     print('_' * 10)
-#     for number, product in enumerate(product_list, 1):
-#         print(f"{number}.", end=' '), product.show()
-
-
-# def show_total_amount_in_store(product_list):
-#
-#     """Prints total quantity of the all products in the store"""
-#
-#     total_amount = 0
-#     for product in product_list:
-#         total_amount += product.quantity
-#     print(f"Total of {total_amount} items in store")
-
-
 def get_valid_product_choice():
 
     """Prompts to choose the product, validates and returns it"""
