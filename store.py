@@ -2,22 +2,27 @@ from products import Product
 
 class Store:
 
+    def __init__(self, store_products: list):
+        self.store_products = Store.validate_products(store_products)
+
+
     def validate_products(store_products):
 
         """Validates the entered store products"""
 
         try:
             if not isinstance(store_products, list):
-                raise Exception('Products must be a list')
+                raise TypeError('Products must be a list')
+            if len(store_products) == 0:
+                raise ValueError('List is empty')
             for product in store_products:
                 if not isinstance(product, Product):
-                    raise Exception('Wrong format of the product. Only Product type is allowed.')
+                    raise TypeError('Wrong format of the product. Only Product type is allowed.')
             return store_products
-        except Exception as e:
+        #I didn't get why I should just return here None, because anyway None will be returned.
+        except TypeError and ValueError and Exception as e:
             print(f"Such error occurred: {e}")
 
-    def __init__(self, store_products: list):
-        self.store_products = Store.validate_products(store_products)
 
     def validate_product(product):
 
@@ -25,17 +30,18 @@ class Store:
 
         try:
             if not isinstance(product, Product):
-                raise Exception('Only Product type is allowed')
+                raise TypeError('Only Product type is allowed')
             return product
-        except Exception as e:
+        except TypeError and Exception as e:
             print(f"Such error occurred: {e}")
 
 
     def add_product(self, product: Product):
 
         """Adds store product"""
-
-        self.store_products.append(Store.validate_product(product))
+        checked_product = Store.validate_product(product)
+        if checked_product is not None:
+            self.store_products.append(checked_product)
 
 
     def remove_product(self, product: Product):
@@ -62,19 +68,38 @@ class Store:
         return [product for product in self.store_products if product.is_active()]
 
 
+    def list_all_products(product_list):
+
+        """Prints full info about entered products"""
+
+        print('_' * 10)
+        for number, product in enumerate(product_list, 1):
+            print(f"{number}.", end=' '), product.show()
+
+
+    def show_total_amount_in_store(product_list):
+
+        """Prints total quantity of the all products in the store"""
+
+        total_amount = 0
+        for product in product_list:
+            total_amount += product.quantity
+        print(f"Total of {total_amount} items in store")
+
+
     def validate_shopping_list(shopping_list):
 
         """Validates list of products, which is necessary to make the order"""
 
         try:
             if not isinstance(shopping_list, list):
-                raise Exception('Invalid format of the shopping list.')
+                raise TypeError('Invalid format of the shopping list.')
             return shopping_list
-        except Exception as e:
+        except TypeError and Exception as e:
             print(f"Such error occurred: {e}")
 
 
-    def order(shopping_list: list):
+    def order(self, shopping_list: list):
 
         """
         According to the entered list of products decreases their amount in the store

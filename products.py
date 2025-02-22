@@ -1,16 +1,24 @@
 class Product:
 
+    def __init__(self, name, price, quantity):
+        self.name = Product.validate_name(name)
+        self.price = Product.validate_price(price)
+        self.quantity = Product.validate_quantity(quantity)
+        self.active = ''
+        self.activate()
+
+
     def validate_name(name: str):
 
         """Validates name of product"""
 
         try:
             if False in [i.isalnum() for i in name.split()] or name.isspace() or len(name) == 0:
-                raise Exception('Only literals and numbers are allowed.')
+                raise ValueError('Only literals and numbers are allowed.')
             return name
         except AttributeError:
             print('Only literals and numbers are allowed.')
-        except Exception as e:
+        except ValueError and Exception as e:
             print(f"Such error occurred: {e}")
 
 
@@ -19,10 +27,10 @@ class Product:
         """Validates price of product"""
 
         try:
-            if not str(price).isdigit():
-                raise Exception('Only positive integers are allowed.')
+            if not isinstance(price, (int, float)) or price < 0:
+                raise ValueError('Only positive integers are allowed.')
             return price
-        except Exception as e:
+        except ValueError and Exception as e:
             print(f"Such error occurred: {e}")
 
 
@@ -32,17 +40,10 @@ class Product:
 
         try:
             if not str(quantity).isdigit():
-                raise Exception('Only positive integers are allowed.')
+                raise ValueError('Only positive integers are allowed.')
             return quantity
-        except Exception as e:
+        except ValueError and Exception as e:
             print(f"Such error occurred: {e}")
-
-
-    def __init__(self, name, price, quantity):
-        self.name = Product.validate_name(name)
-        self.price = Product.validate_price(price)
-        self.quantity = Product.validate_quantity(quantity)
-        self.active = True
 
 
     def get_quantity(self) -> int:
@@ -54,11 +55,11 @@ class Product:
 
     def set_quantity(self, quantity):
 
-        """Sets quantity of product"""
+        """Decreases the quantity of product"""
 
-        self.quantity = quantity
+        self.quantity -= quantity
         if self.quantity == 0:
-            self.active = False
+            self.deactivate()
 
 
     def is_active(self) -> bool:
@@ -109,7 +110,5 @@ class Product:
         """
 
         if self.validate_quantity_in_stock(quantity):
-            self.quantity -= quantity
-            if self.quantity == 0:
-                self.deactivate()
+            self.set_quantity(quantity)
             return quantity * self.price
